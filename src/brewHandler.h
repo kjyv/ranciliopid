@@ -71,29 +71,29 @@ boolean brewPIDDisabled = false;                    // is PID disabled for delay
 /**
  * @brief Switch or trigger input for BREW SWITCH
  */
-void checkbrewswitch() {
+void checkBrewSwitch() {
     #if BREWSWITCH_TYPE == 1
-            // Digital 
-            brewSwitch = digitalRead(PIN_BREWSWITCH);
+        // Digital 
+        brewSwitch = digitalRead(PIN_BREWSWITCH);
     #endif
 
     #if BREWSWITCH_TYPE == 2
-            int reading = digitalRead(PIN_BREWSWITCH);
+        int reading = digitalRead(PIN_BREWSWITCH);
 
-            if (reading != lastStateBrewTrigger) {
-                // restart the debouncing timer
-                lastDebounceTimeBrewTrigger = millis();
-                // set new button state 
+        if (reading != lastStateBrewTrigger) {
+            // restart the debouncing timer
+            lastDebounceTimeBrewTrigger = millis();
+            // set new button state 
+        }
+        else if ((millis() - lastDebounceTimeBrewTrigger) > debounceDelayBrewTrigger) {
+            // whatever the reading is at, it's been there for longer than the debounce
+            // delay, so take it as the actual current state:
+            
+            if (brewSwitchTrigger != reading) {
+                brewSwitchTrigger = reading;
             }
-            else if ((millis() - lastDebounceTimeBrewTrigger) > debounceDelayBrewTrigger) {
-                // whatever the reading is at, it's been there for longer than the debounce
-                // delay, so take it as the actual current state:
-                
-                if (brewSwitchTrigger != reading) {
-                    brewSwitchTrigger = reading;
-                }
-            }
-            lastStateBrewTrigger = reading;
+        }
+        lastStateBrewTrigger = reading;
 
         // Convert trigger signal to brew switch state
         switch (brewSwitchTriggerCase) {
@@ -177,7 +177,7 @@ void backflush() {
 
     digitalWrite(PIN_HEATER, LOW);  // Stop heating
 
-    checkbrewswitch();
+    checkBrewSwitch();
 
     if (brewSwitch == LOW && backflushState != kBackflushWaitBrewswitchOn) {  // Abort function for state machine from every state
         backflushState = kBackflushWaitBrewswitchOff;
@@ -249,7 +249,7 @@ void backflush() {
 void brew() {
     if (OnlyPID == 0) {
         unsigned long currentMillisTemp = millis();
-        checkbrewswitch();
+        checkBrewSwitch();
 
         if (brewSwitch == LOW && brewCounter > kBrewIdle) {
             // abort function for state machine from every state
@@ -370,7 +370,7 @@ void brew() {
  */
 void brew() {
     if (OnlyPID == 0) {
-        checkbrewswitch();
+        checkBrewSwitch();
         unsigned long currentMillisTemp = millis();
 
         if (brewSwitch == LOW && brewCounter > kBrewIdle) {

@@ -1011,6 +1011,8 @@ void handleMachineState() {
 
         // Current temperature is just below the setpoint
         case kAtSetpoint:
+            brewDetection();
+
             // when temperature has reached BrewSetpoint properly, switch to kPidNormal
             if (temperature >= brewSetpoint) {
                 machineState = kPidNormal;
@@ -2416,7 +2418,7 @@ void looppid() {
     if (currentMillisDisplay - previousMillisDisplay >= intervalDisplay) {
         previousMillisDisplay = currentMillisDisplay;
     #if DISPLAYTEMPLATE < 20  // not using vertical template
-        Displaymachinestate();
+        displayMachineState();
     #endif
         printScreen();  // refresh display
     }

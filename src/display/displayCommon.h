@@ -238,7 +238,11 @@ void displayLogo(String displaymessagetext, String displaymessagetext2) {
  * @brief display shot timer
  */
 void displayShottimer(void) {
-    if ((machineState == kBrew || brewSwitchTriggerCase == 31) && FEATURE_SHOTTIMER == 1 && SHOTTIMER_TYPE == 1) {
+    if (FEATURE_SHOTTIMER == 0) {
+        return;
+    }
+
+    if ((machineState == kBrew || brewSwitchTriggerCase == 31) && SHOTTIMER_TYPE == 1) {
         u8g2.clearBuffer();
 
         if (brewSwitchTriggerCase != 31) {
@@ -259,7 +263,7 @@ void displayShottimer(void) {
     * nothing should be done, otherwise wrong time is displayed
     * because the switch is pressed later than totalBrewTime
     */
-    if (((machineState == kShotTimerAfterBrew && brewSwitchTriggerCase != 31) && FEATURE_SHOTTIMER == 1 && SHOTTIMER_TYPE == 1)) {
+    if ((machineState == kShotTimerAfterBrew && brewSwitchTriggerCase != 31) && SHOTTIMER_TYPE == 1) {
         u8g2.clearBuffer();
         u8g2.drawXBMP(-1, 11, Brew_Cup_Logo_width, Brew_Cup_Logo_height, Brew_Cup_Logo);
 
@@ -270,7 +274,7 @@ void displayShottimer(void) {
     }
 
     #if (ONLYPIDSCALE == 1 || BREWMODE == 2)
-        if ((machineState == kBrew) && FEATURE_SHOTTIMER == 1 && SHOTTIMER_TYPE == 2) {
+        if ((machineState == kBrew) && SHOTTIMER_TYPE == 2) {
             u8g2.clearBuffer();
 
             // temp icon
@@ -287,7 +291,7 @@ void displayShottimer(void) {
             u8g2.sendBuffer();
         }
 
-        if (((machineState == kShotTimerAfterBrew) && FEATURE_SHOTTIMER == 1 && SHOTTIMER_TYPE == 2)) {
+        if (((machineState == kShotTimerAfterBrew) && SHOTTIMER_TYPE == 2)) {
             u8g2.clearBuffer();
             u8g2.drawXBMP(-1, 11, Brew_Cup_Logo_width, Brew_Cup_Logo_height, Brew_Cup_Logo);
             u8g2.setFont(u8g2_font_profont22_tf);
@@ -309,7 +313,7 @@ void displayShottimer(void) {
 /**
  * @brief display heating logo
  */
-void Displaymachinestate() {
+void displayMachineState() {
     if (FEATURE_HEATINGLOGO > 0 && (machineState == kInit || machineState == kColdStart) && brewSwitchTriggerCase != 31) {
         // For status info
         u8g2.clearBuffer();
